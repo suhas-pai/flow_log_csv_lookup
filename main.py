@@ -1,6 +1,6 @@
 import csv
-import sys
 import socket
+import sys
 
 from enum import Enum
 
@@ -40,7 +40,6 @@ def main():
     }
 
     portAndProtocolToTag = {}
-
     try:
         with open(csvFilePath, "r") as f:
             reader = csv.DictReader(f)
@@ -87,20 +86,21 @@ def main():
                 try:
                     dstport = parts[FlowLogFieldIndex.SourcePort.value]
                     protocolNumber = int(parts[FlowLogFieldIndex.Protocol.value])
-                    protocolName = protocolNumberToName.get(protocolNumber)
                 except KeyError:
                     print(
                         f"Flow log file at path '{flowLogFilePath}' is not in the correct format"
                     )
                     sys.exit(1)
 
+                protocolName = protocolNumberToName.get(protocolNumber)
                 tag = portAndProtocolToTag.get((dstport, protocolName))
+
                 if tag is None:
                     tag = "untagged"
 
                 tagToCount[tag] = tagToCount.get(tag, 0) + 1
                 portAndProtocolToCount[(dstport, protocolName)] = (
-                    portAndProtocolToCount.get((dstport, protocolName), 0 + 1)
+                    portAndProtocolToCount.get((dstport, protocolName), 0) + 1
                 )
     except FileNotFoundError:
         print(f"Flow log file not found at path: {flowLogFilePath}")
