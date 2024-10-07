@@ -97,6 +97,9 @@ def main():
                 if len(parts) == 0:
                     continue
 
+                if parts[FlowLogFieldIndex.Version.value] != "2":
+                    continue
+
                 try:
                     dstport = parts[FlowLogFieldIndex.SourcePort.value]
                     protocolNumber = int(parts[FlowLogFieldIndex.Protocol.value])
