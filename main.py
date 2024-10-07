@@ -32,13 +32,6 @@ def main():
     flowLogFilePath = sys.argv[2]
     outputFilePath = sys.argv[3]
 
-    prefix = "IPPROTO_"
-    protocolNumberToName = {
-        num: name.lower()[len(prefix) :]
-        for name, num in vars(socket).items()
-        if name.startswith(prefix)
-    }
-
     portAndProtocolToTag = {}
     try:
         with open(csvFilePath, "r") as f:
@@ -73,11 +66,18 @@ def main():
         )
         sys.exit(1)
 
+    prefix = "IPPROTO_"
+    protocolNumberToName = {
+        num: name.lower()[len(prefix) :]
+        for name, num in vars(socket).items()
+        if name.startswith(prefix)
+    }
+
     tagToCount = {}
     portAndProtocolToCount = {}
 
     try:
-        with open(flowLogFilePath, "r") as f:  # Flow Log File
+        with open(flowLogFilePath, "r") as f:
             for line in f:
                 parts = line.split()
                 if len(parts) == 0:
