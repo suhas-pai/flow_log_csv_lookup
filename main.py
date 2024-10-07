@@ -66,6 +66,10 @@ def main():
         )
         sys.exit(1)
 
+    if len(portAndProtocolToTag) == 0:
+        print(f"CSV file at path '{csvFilePath}' is empty")
+        sys.exit(1)
+
     prefix = "IPPROTO_"
     protocolNumberToName = {
         num: name.lower()[len(prefix) :]
@@ -115,6 +119,10 @@ def main():
         print(
             f"Encountered internal error while processing flow-log file at path '{flowLogFilePath}': {sys.exc_info()[0]}"
         )
+        sys.exit(1)
+
+    if len(tagToCount) == 0:
+        print(f"Flow log file at path '{flowLogFilePath}' is empty")
         sys.exit(1)
 
     try:
