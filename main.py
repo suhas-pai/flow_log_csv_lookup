@@ -33,14 +33,24 @@ def main():
     outputFilePath = sys.argv[3]
 
     portAndProtocolToTag = {}
+    tagToCase = {}
+
     try:
         with open(csvFilePath, "r") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 try:
+                    tag = row.get("tag")
                     portAndProtocolToTag.update(
-                        {(row.get("dstport"), row.get("protocol")): row.get("tag")}
+                        {
+                            (
+                                row.get("dstport"),
+                                row.get("protocol").lower(),
+                            ): tag.lower()
+                        }
                     )
+
+                    tagToCase.update({tag.lower(): tag})
                 except KeyError:
                     print(
                         f"CSV file at path '{csvFilePath}' doesn't have a 'dstport' and 'protocol' column"
@@ -129,7 +139,7 @@ def main():
         with open(outputFilePath, "w") as f:
             f.write("Tag,Count\n")
             for tag, count in tagToCount.items():
-                f.write(f"{tag},{count}\n")
+                f.write(f"{tagToCase.get(tag, tag)},{count}\n")
 
             f.write("\nPort,Protocol,Count\n")
             for portAndProtocol, count in portAndProtocolToCount.items():
